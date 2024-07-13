@@ -1,6 +1,16 @@
 <?php
 
 return [
+    'pproviders' => [
+        /*
+        */
+        App\Providers\AppServiceProvider::class,
+        App\Providers\AuthServiceProvider::class,
+        // App\Providers\BroadcastServiceProvider::class,
+        App\Providers\EventsServiceProvider::class,
+        App\Providers\RouteServiceProvider::class,
+        Barryvdh\DomPDF\ServiceProvider::class,
+    ],
 
     /*
     |--------------------------------------------------------------------------
