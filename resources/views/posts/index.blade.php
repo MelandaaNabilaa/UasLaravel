@@ -28,7 +28,7 @@
         }
         </style>
     <tr>
-        <td> class="text-center>
+        <td class="text-center">
        <img src="{{ asset('images/254721151_utb_kotak.png') }}" class="rounded" style="width:150px" alt="Post Image">
 </td>
 <td>Contoh Judul</td>

@@ -1,42 +1,27 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\PostController;
+use App\Http\Controllers\ProfileController;
 
 Route::get('/', function () {
     return view('welcome');
 });
 
-public function add(){
-    return view('posts.add');
-}
+Route::middleware('auth')->group(function () {
+    Route::get("/", [PostController::class, "index"])->name("home");
+    Route::post("/logout", [PostController::class, "logout"])->name("logout");
 
-Route::get('/view', [PostController::class, 'view'])->name('posts.view');
-Route::get('/add', [PostController::class, 'add'])->name('posts.add');
-Route::get('/edit', [PostController::class, 'edit'])->name('posts.edit');
-Route::get('/login', [PostController::class, 'login'])->name('posts.login');
+    Route::resource('/posts', PostController::class)->except(['create', 'show', 'edit']);
+    Route::get('/view/{code}', [PostController::class, "view"])->name("posts.view");
+    Route::get('/add', [PostController::class, 'add'])->name('posts.add');
+    Route::get('/edit/{code}', [PostController::class, "edit"])->name("posts.edit");
+    Route::get('/pdf', [PostController::class, 'generatePDF'])->name('posts.pdf');
+});
 
-//Route::get('/', function() {
-// return view('posts.index');
-// });
-Route::get('/', [PostController::class, 'index']);
-//Route untuk resource post
-Route::resource('/posts', PostController::class);
-
-Route::get('/view', [PostController::class, 'view'])->name('posts.view');
-Route::get('/add', [PostController::class, 'add'])->name('posts.add');
-Route::get('/edit/{code}', [PostController::class, 'edit'])->name('posts.edit');
-Route::get('/login', [PostController::class, 'login'])->name('posts.login');
-
-
-public function destroy($id)
-{
-    $post = Post::findOrFail($id);
-
-    if ($post->image){
-        Storage::disk('public')->delete($post->image);
-    }
-
-    $post->delete();
-
-    return redirect()->route('posts.index')->width('success', 'Post deleted successfully');
-}
+Route::middleware('guest')->group(function () {
+    Route::get('/register', [ProfileController::class, 'registerForm'])->name("profile.register.form");
+    Route::post('/register', [ProfileController::class, 'register'])->name("profile.register");
+    Route::get('/login', [ProfileController::class, 'loginForm'])->name("profile.login.form");
+    Route::post('/login', [ProfileController::class, 'login'])->name("profile.login");
+});
